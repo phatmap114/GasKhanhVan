@@ -1,5 +1,5 @@
-import {useRouter} from 'next/router'
-import {useEffect, useState} from 'react'
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -13,47 +13,56 @@ import {
   Space,
   Tag,
   Divider,
-} from 'antd'
-import {ShoppingCartOutlined} from '@ant-design/icons'
-import cylinders, {Cylinder} from '../../../data/cylinders'
-import MainLayout from '@/layouts/MainLayout'
-import ProductCard from '@/components/common/ProductCard'
+  Breadcrumb,
+} from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import cylinders, { Cylinder } from "../../../data/cylinders";
+import MainLayout from "@/layouts/MainLayout";
+import ProductCard from "@/components/common/ProductCard";
 
-const {Title, Text, Paragraph} = Typography
-const {TabPane} = Tabs
+const { Title, Text, Paragraph } = Typography;
+const { TabPane } = Tabs;
 
 const ProductDetail: React.FC = () => {
-  const router = useRouter()
-  const {id} = router.query
+  const router = useRouter();
+  const { id } = router.query;
 
-  const [cylinder, setCylinder] = useState<Cylinder | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [cylinder, setCylinder] = useState<Cylinder | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
-      const product = cylinders.find((c) => c.id === id)
-      setCylinder(product || null)
-      setLoading(false)
+      const product = cylinders.find((c) => c.id === id);
+      setCylinder(product || null);
+      setLoading(false);
     }
-  }, [id])
+  }, [id]);
 
-  if (loading) return <Spin size='large' style={{display: 'block', margin: '50px auto'}} />
-  if (!cylinder) return <Text type='danger'>Product not found.</Text>
+  if (loading)
+    return (
+      <Spin size="large" style={{ display: "block", margin: "50px auto" }} />
+    );
+  if (!cylinder) return <Text type="danger">Không tìm thấy sản phẩm.</Text>;
 
   // Fetch related products (e.g., same category or type)
   //   const relatedProducts = cylinders.filter((c) => c.type === cylinder.type && c.id !== cylinder.id)
-  const relatedProducts = cylinders.filter((c) => parseInt(c.id) < 5)
+  const relatedProducts = cylinders.filter((c) => parseInt(c.id) < 5);
 
   return (
     <MainLayout>
-      <Row gutter={[32, 32]} style={{padding: '20px'}}>
+      <Breadcrumb style={{ padding: "10px 50px" }}>
+        <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Breadcrumb.Item>List</Breadcrumb.Item>
+        <Breadcrumb.Item>App</Breadcrumb.Item>
+      </Breadcrumb>
+      <Row gutter={[32, 32]} style={{ padding: "20px" }}>
         {/* Smaller Image Section */}
         <Col xs={24} sm={12} md={8}>
           <Badge.Ribbon
-            text={cylinder.stock > 0 ? 'In Stock' : 'Out of Stock'}
-            color={cylinder.stock > 0 ? 'green' : 'red'}
+            text={cylinder.stock > 0 ? "Còn hàng" : "Hết hàng"}
+            color={cylinder.stock > 0 ? "green" : "red"}
           >
-            <Image width='100%' src={cylinder.image} alt={cylinder.name} />
+            <Image width="100%" src={cylinder.image} alt={cylinder.name} />
           </Badge.Ribbon>
         </Col>
 
@@ -61,31 +70,39 @@ const ProductDetail: React.FC = () => {
         <Col xs={24} sm={12} md={16}>
           <Card
             bordered={false}
-            style={{boxShadow: '0px 4px 10px rgba(0,0,0,0.1)', borderRadius: '10px'}}
+            style={{
+              boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+              borderRadius: "10px",
+            }}
           >
             <Title level={2}>{cylinder.name}</Title>
-            <Text type='secondary' style={{fontSize: '16px'}}>
-              Type: {cylinder.type}
+            <Text type="secondary" style={{ fontSize: "16px" }}>
+              Danh mục: {cylinder.type}
             </Text>
 
             {/* Price */}
-            <Row align='middle' gutter={16}>
+            <Row align="middle" gutter={16}>
               <Col>
-                <Title level={3} style={{color: '#E53935', fontWeight: 'bold'}}>
+                <Title
+                  level={3}
+                  style={{ color: "#E53935", fontWeight: "bold" }}
+                >
                   $
-                  {cylinder.price.toLocaleString('vi', {style: 'currency', currency: 'VND'}) ||
-                    'LIÊN HỆ'}
+                  {cylinder.price.toLocaleString("vi", {
+                    style: "currency",
+                    currency: "VND",
+                  }) || "LIÊN HỆ"}
                 </Title>
               </Col>
               <Col>
                 {cylinder.stock > 0 && (
-                  <Tag color='green' style={{fontSize: '16px'}}>
-                    Available
+                  <Tag color="green" style={{ fontSize: "16px" }}>
+                    Còn hàng
                   </Tag>
                 )}
                 {cylinder.stock === 0 && (
-                  <Tag color='red' style={{fontSize: '16px'}}>
-                    Out of Stock
+                  <Tag color="red" style={{ fontSize: "16px" }}>
+                    Hết hàng
                   </Tag>
                 )}
               </Col>
@@ -94,62 +111,71 @@ const ProductDetail: React.FC = () => {
             {/* Description */}
             <Paragraph>{cylinder.description}</Paragraph>
 
-            <Space style={{marginTop: '20px'}}>
+            <Space style={{ marginTop: "20px" }}>
               <Button
-                type='primary'
+                type="primary"
                 icon={<ShoppingCartOutlined />}
-                size='large'
+                size="large"
                 disabled={cylinder.stock === 0}
               >
-                Buy Now
+                Mua ngay
               </Button>
-              <Button type='default' size='large'>
-                Add to Cart
+              <Button type="default" size="large">
+                Thêm vào giỏ hàng
               </Button>
             </Space>
           </Card>
-
-          {/* Tabs for More Details */}
-          <Tabs defaultActiveKey='1' style={{marginTop: '20px'}}>
-            <TabPane tab='Product Description' key='1'>
-              <Paragraph>{cylinder.description}</Paragraph>
-            </TabPane>
-            <TabPane tab='Specifications' key='2'>
-              <ul>
-                <li>
-                  <strong>Type:</strong> {cylinder.type}
-                </li>
-                <li>
-                  <strong>Price:</strong> $
-                  {cylinder.price.toLocaleString('vi', {style: 'currency', currency: 'VND'}) ||
-                    'LIÊN HỆ'}
-                </li>
-                <li>
-                  <strong>Stock:</strong>{' '}
-                  {cylinder.stock > 0 ? `${cylinder.stock} Available` : 'Out of Stock'}
-                </li>
-                <li>
-                  <strong>Created At:</strong> {new Date(cylinder.createdAt).toLocaleDateString()}
-                </li>
-              </ul>
-            </TabPane>
-            <TabPane tab='Reviews' key='3'>
-              <Text>No reviews yet. Be the first to leave a review!</Text>
-            </TabPane>
-          </Tabs>
-
-          {/* Divider for More Options */}
-          <Divider />
-          <Space>
-            <Button type='link' href='#help-center'>
-              Need Help?
-            </Button>
-          </Space>
         </Col>
 
         {/* Related Products Section */}
-        <Col xs={24} style={{marginTop: '40px'}}>
-          <Title level={3}>Related Products</Title>
+        <Col xs={24} style={{ marginTop: "40px" }}>
+          <Card
+            bordered={false}
+            style={{
+              boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+              borderRadius: "10px",
+            }}
+          >
+            {/* Tabs for More Details */}
+            <Tabs defaultActiveKey="1" style={{ marginTop: "20px" }}>
+              <TabPane tab="Thông tin sản phẩm" key="1">
+                <ul>
+                  <li>
+                    <strong>Danh mục:</strong> {cylinder.type}
+                  </li>
+                  <li>
+                    <strong>Giá:</strong> $
+                    {cylinder.price.toLocaleString("vi", {
+                      style: "currency",
+                      currency: "VND",
+                    }) || "LIÊN HỆ"}
+                  </li>
+                  <li>
+                    <strong>Số lượng:</strong>{" "}
+                    {cylinder.stock > 0
+                      ? `${cylinder.stock} Available`
+                      : "Out of Stock"}
+                  </li>
+                </ul>
+              </TabPane>
+              <TabPane tab="Đánh giá" key="2">
+                <Text>Chưa có đánh giá nào! Đánh giá ngay</Text>
+              </TabPane>
+            </Tabs>
+
+            {/* Divider for More Options */}
+            <Divider />
+            <Space>
+              <Button type="link" href="#help-center">
+                Bạn cần hỗ trợ? Gọi 001230012 để được trợ giúp
+              </Button>
+            </Space>
+          </Card>
+        </Col>
+
+        {/* Related Products Section */}
+        <Col xs={24} style={{ marginTop: "40px" }}>
+          <Title level={3}>Sản phẩm liên quan</Title>
           <Row gutter={[16, 16]}>
             {relatedProducts.length > 0 ? (
               relatedProducts.map((relatedProduct) => (
@@ -164,7 +190,7 @@ const ProductDetail: React.FC = () => {
         </Col>
       </Row>
     </MainLayout>
-  )
-}
+  );
+};
 
-export default ProductDetail
+export default ProductDetail;

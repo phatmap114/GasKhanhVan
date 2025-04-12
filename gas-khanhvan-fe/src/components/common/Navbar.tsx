@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 import styles from "../../styles/common/Navbar.module.scss";
+import Link from "next/link";
 const { Search } = Input;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -79,7 +80,7 @@ const Navbar = () => {
   return (
     <div className={styles.navbar_sticky}>
       <div className={styles.wrapper}>
-        <div>Logo</div>
+        <Link href="/">Logo</Link>
         <Menu
           onClick={onClick}
           selectedKeys={[current]}

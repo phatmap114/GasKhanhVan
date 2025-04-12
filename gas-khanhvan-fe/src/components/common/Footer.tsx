@@ -59,7 +59,8 @@ const Footer = () => {
         </Row>
       </footer>
       <div className={styles.footer_mark}>
-        © 2024 Gas Khánh Vân - Cửa hàng Gas Quận 7. All Rights Reserved.
+        © {`${new Date().getFullYear()}`} Gas Khánh Vân - Đại lý Gas Quận 7, Cửa
+        hàng Gas Quận 7. All Rights Reserved.
       </div>
     </>
   );

@@ -206,7 +206,7 @@ const GasCylinderTable: React.FC = () => {
       key: "image",
       render: (image: string) => (
         <img
-          src={`${process.env.REACT_APP_BASE_URL}/${image}`}
+          src={`${image}`}
           alt="cylinder"
           style={{ width: "50px", height: "50px" }}
         />
@@ -261,7 +261,6 @@ const GasCylinderTable: React.FC = () => {
   const handleFileChange = ({ file }: any) => {
     setFile(file);
   };
-  console.log("asdasd: ", cylinderDetails?.name);
   return (
     <Card
       title="Manage Gas Cylinders"
@@ -284,7 +283,7 @@ const GasCylinderTable: React.FC = () => {
             columns={columns}
             dataSource={cylinders}
             loading={loading}
-            rowKey="id"
+            rowKey="_id"
             pagination={{ pageSize: 5 }}
           />
         </Col>
